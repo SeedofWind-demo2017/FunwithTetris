@@ -1,4 +1,4 @@
-package lab10;
+package tetris;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -6,7 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
-import lab10.ShapeModel.Piece;
+import tetris.ShapeModel.Piece;
 
 /**
  * ScorePanel extends Jpanel and is responsible for displaying the status of the game including

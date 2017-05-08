@@ -1,9 +1,9 @@
-package lab10;
+package tetris;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import lab10.ShapeModel.Piece;
+import tetris.ShapeModel.Piece;
 
 /**
  * TetrisAdpater extends KeyAdapter,I chose to use keyadapter instead of keyListner since i only want to implement keyPressed 

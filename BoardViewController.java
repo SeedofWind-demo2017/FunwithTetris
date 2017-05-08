@@ -1,57 +1,54 @@
-package lab10;
+package tetris;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-
-
 import javax.swing.JPanel;
 import javax.swing.Timer;
 //Run on event thread
-
-import lab10.ShapeModel.Piece;
+import tetris.ShapeModel.Piece;
 
 
 /**
- * BoardViewController extends Jpanel holds all the logic regarding the game itself. 
-It has 
+ * BoardViewController extends Jpanel holds all the logic regarding the game itself.
+It has
   * Group of Static final constants that descrbing the board layout and piece color, and the timer delay (see detail in the file)
   * a (swing)*timer* instance that we use to time our game, actionPerformed will be invoked every 300ms
   * boolean variables
     * isNewGame determines whether it is a new game
     * currentPieceDone determines whether the current piece finished falling (reach bottom, hit another piece)
-    * isStarted determines whether the game has been started 
+    * isStarted determines whether the game has been started
     * isPaused determines whether the game has been paused
     * morethanoneGame determines whether the game is played more than one time (to display different welcome msg)
     * SpawnCreated is used to tell whether we have several lines to be removed to stop us from spawning new pieces twice
   * lineAchived keeps track of how many lines have been successfully removed (score = 10*this number)
-  * currentx/y gives us the location of the  current falling piece 
+  * currentx/y gives us the location of the  current falling piece
   * nextpiece gives the shape of the next piece falling
   * currenpiece gives the shape of the current piece falling
-  * board is a 2d array that keeps track of the shape of each logical square 
+  * board is a 2d array that keeps track of the shape of each logical square
 
 We devide the board to logical squares, we have Board_height*Board_width number of squares. Each Tile is made up with four suqares. *WE MOVE BY SQUARE, NOT PIEXEL*
 
 Essentially, each iteration of animation, we will draw all these squares according to our board model.
 
-BoardViewController implements Anim, which extends the actionListener interface. BoardViewcontroller will listen to the timer, every clock cycle, actionPerforemd of this classwill be invoked 
+BoardViewController implements Anim, which extends the actionListener interface. BoardViewcontroller will listen to the timer, every clock cycle, actionPerforemd of this classwill be invoked
 
-        
+
         if (currentPieceDone) {
 			currentPieceDone = false;
 			Spawn();
 		} else {
 			nextIteration();
 		}
-	
-        
-If the falling of currentpiece is done we go to nextIteraton, if not we spawn a new piece. This is how the game will progress without the key interruption. 
+
+
+If the falling of currentpiece is done we go to nextIteraton, if not we spawn a new piece. This is how the game will progress without the key interruption.
 BoardViewController extends Jpanel. we implement addKeyListener class to listen to keyInput. KeyInput is handled by TetrisApdater(discuss later).
 
 I chose Adapter over listener since i only want to implement keyPressed.
- * 
+ *
  * @author SeedZ
  *
  */
@@ -68,7 +65,7 @@ public class BoardViewController extends JPanel implements Anim {
 	 * Center of the Board
 	 */
 	private static final int CENTER_X = 120;
-	
+
 	/*
 	 * Tile Width and Height for each individual tile (piece)
 	 */
@@ -78,13 +75,13 @@ public class BoardViewController extends JPanel implements Anim {
 	 * Where each peice start falling
 	 */
 	private static final int BOARDTOP = 6;
-	
+
 	/*
 	 * Dimension constants for this panel
 	 */
 	public static final int PANEL_WIDTH = 250;
 	public static final int PANEL_HEIGHT = 490;
-	
+
 	/*
 	 * Time Delay for the timer
 	 */
@@ -93,7 +90,7 @@ public class BoardViewController extends JPanel implements Anim {
 	 * How many square to represent one tile
 	 */
 	public static final int TILE_MADE_SIZE = 4;
-	
+
 	/*
 	 * coordinates for showing the enter/notification msg  on the game board
 	 */
@@ -110,11 +107,11 @@ public class BoardViewController extends JPanel implements Anim {
 	public static final Color col5 = new Color(204, 204, 102);
 
 
-	
-	
-	
+
+
+
 	/*
-	 * a (swing)timer instance that we use to time our game, 
+	 * a (swing)timer instance that we use to time our game,
 	 * actionPerformed will be invoked every 300ms according to our setting
 	 */
 	public Timer timer;
@@ -134,7 +131,7 @@ public class BoardViewController extends JPanel implements Anim {
 	 * determines whether the game has been paused
 	 */
 	public boolean isPaused = false;
-	
+
 	/*
 	 * determines whether the game is played more than one time (to display different welcome msg)
 	 */
@@ -143,7 +140,7 @@ public class BoardViewController extends JPanel implements Anim {
 	 * is used to tell whether we have several lines to be removed to stop us from spawning new pieces twice
 	 */
 	public boolean SpawnCreated = false;
-	
+
 	/*
 	 *  keeps track of how many lines have been successfully removed (score = 10*this number)
 	 */
@@ -162,9 +159,9 @@ public class BoardViewController extends JPanel implements Anim {
 	 * Shape of current piece
 	 */
 	public ShapeModel currentpiece;
-	
+
 	/*
-	 * board is a 2d array that keeps track of the shape of each logical square 
+	 * board is a 2d array that keeps track of the shape of each logical square
 	 */
 	public Piece[][] board;
 
@@ -175,8 +172,8 @@ public class BoardViewController extends JPanel implements Anim {
 
 	@Override
 	/**
-	 * overrided actionperformed to drive the game 
-	 * If the falling of currentpiece is done we go to nextIteraton, if not we spawn a new piece. This is how the game will progress without the key interruption. 
+	 * overrided actionperformed to drive the game
+	 * If the falling of currentpiece is done we go to nextIteraton, if not we spawn a new piece. This is how the game will progress without the key interruption.
 	 * BoardViewController extends Jpanel. we implement addKeyListener class to listen to keyInput. KeyInput is handled by TetrisApdater(discuss later).
 	 */
 	public void actionPerformed(ActionEvent e) {
@@ -198,20 +195,20 @@ public class BoardViewController extends JPanel implements Anim {
 		this.tetirs = tetrisgame;
 
 		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-		
-		//Since everything happen in the event thread, we do this to set the focus 
+
+		//Since everything happen in the event thread, we do this to set the focus
 		//to the board to be able to listen to the key input
 		setFocusable(true);
 		currentpiece = new ShapeModel();
 		nextpiece = new ShapeModel();
 		board = new Piece[BOARD_WIDTH][BOARD_HEIGHT];
-		
-		
+
+
 		timer = new Timer(FREQUENCY, this);
 		//We add the event handler, keylistner in this case to our panel
 		addKeyListener(new TetrisAdapter(this));
-		
-		
+
+
 		clearBoard();
 		timer.start();
 
@@ -220,7 +217,7 @@ public class BoardViewController extends JPanel implements Anim {
 
 
 	/**
-	 * Start The game by 
+	 * Start The game by
 	 * 1. initializing all the instance variables
 	 * 2. Spawn a new piece and notify the score panel
 	 * 3. notice we actually stop the timer here to wait for the "ENTER" from the keyboard
@@ -260,10 +257,10 @@ public class BoardViewController extends JPanel implements Anim {
 		}
 		repaint();
 	}
-	
-	
-	
-	
+
+
+
+
 
 	/**
 	 * try Move the passed in shape to passed in location (current piece, new desired location due to
@@ -273,7 +270,7 @@ public class BoardViewController extends JPanel implements Anim {
 	 * The reason why we need to pass in the x,y and shape is because of how i implmented the roataion
 	 */
 	public boolean tryMove(ShapeModel Spawn, int tryx, int tryy) {
-		
+
 		for (int i = 0; i < TILE_MADE_SIZE; ++i) {
 			int x = tryx + Spawn.getx(i);
 			int y = tryy - Spawn.gety(i);
@@ -291,9 +288,9 @@ public class BoardViewController extends JPanel implements Anim {
 		repaint();
 		return true;
 	}
-	
+
 	/**
-	 * Check how many lines we can get to score and eliminate by iterating through the board. 
+	 * Check how many lines we can get to score and eliminate by iterating through the board.
 	 * update the socrePanel accordingly
 	 * If we achieved more than one line, we repaint and set CurrentPieceDone to true
 	 */
@@ -329,11 +326,11 @@ public class BoardViewController extends JPanel implements Anim {
 			currentpiece.setShape(Piece.NoShape);
 			repaint();
 		}
-	}	
-	
-	
+	}
+
+
 /**
- * this method will try move the currentPiece one line down until tryMove returns a false 
+ * this method will try move the currentPiece one line down until tryMove returns a false
  * then we update the board according to the newest currentx and currenty
  */
 	public void nextIteration() {
@@ -342,7 +339,7 @@ public class BoardViewController extends JPanel implements Anim {
 	}
 
 	/**
-	 * 
+	 *
 	//Update the board model according to the current location of the falling piece
 	//We only invoke this method when the falling is finished, we are putting the piece into the model (already prestned to user)
 	*/
@@ -392,10 +389,10 @@ public class BoardViewController extends JPanel implements Anim {
 		timer.stop();
 		Spawn();
 	}
-	
+
 	/**
 	 * WE TRY spawn a new piece,
-	 * If cannot spawn a new piece. Game over	
+	 * If cannot spawn a new piece. Game over
 	 */
 	public void Spawn() {
 		currentpiece.setShape(nextpiece.getShape());
@@ -418,7 +415,7 @@ public class BoardViewController extends JPanel implements Anim {
 
 	/**
 	 *  In this paint method, we paint each logical square according to the info in the "board"
-	 *  If the game has not started(or game over), we display welcome message accordingly  
+	 *  If the game has not started(or game over), we display welcome message accordingly
 	 */
 		@Override
 
@@ -457,17 +454,17 @@ public class BoardViewController extends JPanel implements Anim {
 		public void IamSoGoodAtThisGame() {
 			int tryy = currenty;
 			while (tryy-- > 0) {
-				
+
 				nextIteration();
-				
+
 			}
-			
+
 		}
-		
+
 
 	@Override
 	/**
-	 * Draw one square according to the location passed in and according to the shape 
+	 * Draw one square according to the location passed in and according to the shape
 	 * set the color
 	 * @param g- graphics
 	 * @x- x coord
